@@ -1,0 +1,135 @@
+// Pon aquí los nombres, apellidos y números de cédula de la paraja que
+// somete el archivo
+
+/****************************************************************
+
+  ATENCIÓN: Por favor, NO COLOQUES HEADERS EN ESTE ARCHIVO; es decir,
+  algo como # include ...
+
+  Su inclusión puede causar duplicación de símbolos entre tu laboratorio
+  y el evaluador.
+
+  Si piensas que requieres un header especial, notifícalo en el foro, de
+  manera que se coloque en el evaluador.
+
+  Queda a tu responsabilidad si insistes en colocarlos. En todo caso,
+  sabe que si la compilación aborta lo único que se hará es
+  reportártelo, pero no se modificará tu archivo
+****************************************************************/
+
+using Move = tuple<char, Cell>;
+
+using WordMove = tuple<string, DynList<Cell>>;
+
+using Solution = DynList<WordMove>;
+
+
+// Este es un functor para comparar lexicograficamente WordMove. Sólo
+// funciona si tienes aleph-w >= 1.5a.1
+struct CmpMove
+{
+  bool operator () (const WordMove & m1, const WordMove & m2) const
+  {
+    const string & s1 = get<0>(m1);
+    const string & s2 = get<0>(m2);
+    if (s1 != s2)
+      return s1 < s2;
+
+    return lesser(get<1>(m1), get<1>(m2));
+  }
+};
+
+struct WordFind
+{
+  // Estos son los datos sugeridos, eres libre de cambiarlos
+
+  Cnode prefix_root; // raíz del árbol de prefijos. &prefix_root es un
+		     // puntero a la raíz
+
+  Grid grid; // Matriz donde está la sopa de letras
+
+
+  /* Especialmente a partir de aquí podrías usar otras estructuras */
+
+  Trace trace; // Matriz que guarda las casillas del grid que han sido
+	       // procesadas en la palabra actual
+
+  Solution sol; // Lista de palabras encontradas
+
+  // Una alternativa a sol es que manejes un árbol binario equilibrado
+
+  FixedStack<Move> stack; // la pila más rápida de aleph-w, pero
+			  // atención con reservar suficiente longitud
+			  // para la altura del árbol (que será la
+			  // palabra más larga + 2)
+
+  // Por otra parte, puedes usar una pila mas "segura". DynListStack,
+  // por ejemplo
+
+  WordFind(const Grid & g) 
+    : prefix_root('-'), grid(g), trace(g.rows(), grid.cols(), false) // otros atributos
+  {
+
+  }
+
+  // Esta debería de ser una función privada, pero para poder evaluártela
+  // la hacemos pública
+  DynList<Cell> legal_moves(const int row, const int col)
+  {
+    DynList<Cell> list;
+  int r = row - 1;
+  int c = col - 1;
+  bool key = false;
+
+  for(int i = r; (i < r + 3); i++)
+  {
+    if(i < grid.rows())
+    {
+      for(int j = c; (j < c + 3); j++)
+      {
+        if(j < grid.cols())
+        {
+          if(i == row and j == col)
+            key = true;
+          if ((i >= 0 and j >=0) and !key and !trace.read(i,j))
+            list.append(make_tuple(i,j));
+          key = false;
+        }
+      }
+    }
+  }
+    return list;
+  }
+
+  // propuesta de función helper a llamar cuando se detecte un fin de
+  // palabra. Haz como quieras. Si usas una pila, esta función no
+  // debería de alterarla; debe de dejarla en el estado en que la encontró
+  void extract_word_from_stack()
+  {
+
+  }
+
+  // Explora las palabras que están en el grid que comienzan por grid(row,col)
+  void search(const int row, const int col, Cnode * root)
+  {
+
+  }
+
+  // Calcula todas las palabras, del diccionario contenido en el stream
+  // in, que se encuentran en la sopa grid
+  Solution solve(istream & in)
+  {
+    // cargar el diccionario desde in. Manejar palabras con símbolos
+    // inválidos 
+
+    // Recorrer cada celda e invocar a search()
+
+    return sol; // Atención: sol debe estar ordenado lexicográficamente
+  }
+
+  // No olvides llamar al destructor de prefix_tree correctamente
+  ~WordFind()
+  {
+
+  }  
+};

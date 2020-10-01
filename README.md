@@ -1,2 +1,2 @@
 # Aleph
-practicas del profesor leandro rabindranath
+practicas del profesor Leandro Rabindranath
